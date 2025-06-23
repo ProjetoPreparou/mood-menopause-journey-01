@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { useUser } from "@/contexts/UserContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from 'react-router-dom';
 import MoodSelector from "@/components/MoodSelector";
 import MenopauseQuiz from "@/components/MenopauseQuiz";
 import QuizResult from "@/components/QuizResult";
+import { useToast } from "@/hooks/use-toast";
 
 type OnboardingStep = 'info' | 'mood' | 'quiz' | 'result';
 
@@ -16,13 +18,16 @@ const Onboarding = () => {
   const [formData, setFormData] = useState({
     name: '',
     contact: '',
-    contactType: 'email' as 'email' | 'phone'
+    contactType: 'email' as 'email' | 'phone',
+    password: ''
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   
   const { userData, updateUserData } = useUser();
+  const { signUp } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -40,11 +45,13 @@ const Onboarding = () => {
     }
 
     if (!formData.contact.trim()) {
-      newErrors.contact = 'E-mail ou celular é obrigatório';
+      newErrors.contact = 'E-mail é obrigatório';
     } else if (formData.contactType === 'email' && !validateEmail(formData.contact)) {
       newErrors.contact = 'E-mail inválido';
-    } else if (formData.contactType === 'phone' && !validatePhone(formData.contact)) {
-      newErrors.contact = 'Celular inválido';
+    }
+
+    if (!formData.password || formData.password.length < 6) {
+      newErrors.password = 'Senha deve ter pelo menos 6 caracteres';
     }
 
     setErrors(newErrors);
@@ -57,10 +64,14 @@ const Onboarding = () => {
           contact: formData.contact,
           contactType: formData.contactType
         });
-        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API call
         setStep('mood');
       } catch (error) {
         console.error('Error saving user data:', error);
+        toast({
+          title: "Erro",
+          description: "Erro ao salvar dados. Tente novamente.",
+          variant: "destructive",
+        });
       } finally {
         setLoading(false);
       }
@@ -82,8 +93,41 @@ const Onboarding = () => {
     setStep('result');
   };
 
-  const handleComplete = () => {
-    navigate('/dashboard');
+  const handleComplete = async () => {
+    setLoading(true);
+    try {
+      const { error } = await signUp(formData.contact, formData.password, {
+        name: userData.name,
+        mood: userData.mood,
+        menopauseType: userData.menopauseType
+      });
+
+      if (error) {
+        console.error('Signup error:', error);
+        toast({
+          title: "Erro no cadastro",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Cadastro realizado!",
+          description: "Bem-vinda! Você será redirecionada em instantes.",
+        });
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error during signup:', error);
+      toast({
+        title: "Erro",
+        description: "Erro inesperado. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const renderStep = () => {
@@ -116,30 +160,10 @@ const Onboarding = () => {
                   )}
                 </div>
 
-                <div className="space-y-3">
-                  <div className="flex space-x-2">
-                    <Button
-                      type="button"
-                      variant={formData.contactType === 'email' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setFormData(prev => ({ ...prev, contactType: 'email', contact: '' }))}
-                      className={formData.contactType === 'email' ? 'bg-[#A75C3F] hover:bg-[#8B4A36]' : ''}
-                    >
-                      E-mail
-                    </Button>
-                    <Button
-                      type="button"
-                      variant={formData.contactType === 'phone' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setFormData(prev => ({ ...prev, contactType: 'phone', contact: '' }))}
-                      className={formData.contactType === 'phone' ? 'bg-[#A75C3F] hover:bg-[#8B4A36]' : ''}
-                    >
-                      Celular
-                    </Button>
-                  </div>
-
+                <div>
                   <Input
-                    placeholder={formData.contactType === 'email' ? 'seu@email.com' : '(11) 99999-9999'}
+                    placeholder="seu@email.com"
+                    type="email"
                     value={formData.contact}
                     onChange={(e) => setFormData(prev => ({ ...prev, contact: e.target.value }))}
                     className={`border-2 transition-colors ${
@@ -148,6 +172,21 @@ const Onboarding = () => {
                   />
                   {errors.contact && (
                     <p className="text-red-500 text-xs mt-1">{errors.contact}</p>
+                  )}
+                </div>
+
+                <div>
+                  <Input
+                    placeholder="Senha (mínimo 6 caracteres)"
+                    type="password"
+                    value={formData.password}
+                    onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                    className={`border-2 transition-colors ${
+                      errors.password ? 'border-red-300' : 'border-gray-200 focus:border-[#A75C3F]'
+                    }`}
+                  />
+                  {errors.password && (
+                    <p className="text-red-500 text-xs mt-1">{errors.password}</p>
                   )}
                 </div>
 
@@ -188,6 +227,7 @@ const Onboarding = () => {
           <QuizResult
             result={userData.menopauseType!}
             onContinue={handleComplete}
+            loading={loading}
           />
         );
 
