@@ -50,9 +50,10 @@ const resultContent: Record<'C' | 'S' | 'E', ResultContent> = {
 interface QuizResultProps {
   result: 'C' | 'S' | 'E';
   onContinue: () => void;
+  loading?: boolean;
 }
 
-const QuizResult = ({ result, onContinue }: QuizResultProps) => {
+const QuizResult = ({ result, onContinue, loading = false }: QuizResultProps) => {
   const content = resultContent[result];
 
   return (
@@ -104,9 +105,10 @@ const QuizResult = ({ result, onContinue }: QuizResultProps) => {
 
         <Button
           onClick={onContinue}
-          className="w-full bg-[#A75C3F] hover:bg-[#8B4A36] text-white py-3 rounded-full transition-all duration-200 transform hover:scale-105"
+          disabled={loading}
+          className="w-full bg-[#A75C3F] hover:bg-[#8B4A36] text-white py-3 rounded-full transition-all duration-200 transform hover:scale-105 disabled:opacity-50"
         >
-          Continuar para o Dashboard
+          {loading ? 'Finalizando cadastro...' : 'Continuar para o Dashboard'}
         </Button>
       </div>
     </Card>
