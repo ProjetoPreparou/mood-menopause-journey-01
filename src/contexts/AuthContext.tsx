@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signUp = async (email: string, password: string, userData: any) => {
     const redirectUrl = `${window.location.origin}/dashboard`;
     
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -54,18 +54,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     });
 
-    if (!error && userData) {
+    if (!error && data.user) {
       // Save additional profile data
       const { error: profileError } = await supabase
         .from('profiles')
-        .update({
+        .insert({
+          user_id: data.user.id,
           name: userData.name,
+          email: email,
           mood: userData.mood,
           menopause_type: userData.menopauseType
-        })
-        .eq('user_id', (await supabase.auth.getUser()).data.user?.id);
+        });
 
-      console.log('Profile update result:', profileError);
+      console.log('Profile creation result:', profileError);
+      return { error: profileError };
     }
 
     return { error };
