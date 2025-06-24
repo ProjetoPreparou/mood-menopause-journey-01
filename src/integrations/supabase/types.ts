@@ -9,6 +9,117 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      board_journal: {
+        Row: {
+          created_at: string
+          cycle_notes: string | null
+          emotional_state: string | null
+          id: string
+          month_year: string
+          reflections: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          cycle_notes?: string | null
+          emotional_state?: string | null
+          id?: string
+          month_year: string
+          reflections?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          cycle_notes?: string | null
+          emotional_state?: string | null
+          id?: string
+          month_year?: string
+          reflections?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      challenge_progress: {
+        Row: {
+          completed: boolean
+          completed_at: string | null
+          created_at: string
+          day_number: number
+          id: string
+          month_year: string
+          notes: string | null
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          day_number: number
+          id?: string
+          month_year: string
+          notes?: string | null
+          user_id: string
+        }
+        Update: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          day_number?: number
+          id?: string
+          month_year?: string
+          notes?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      premium_content: {
+        Row: {
+          audio_files: string[] | null
+          challenge_description: string | null
+          challenge_title: string | null
+          community_link: string | null
+          created_at: string
+          description: string | null
+          id: string
+          live_title: string | null
+          live_video_url: string | null
+          menu_content: Json | null
+          month_year: string
+          title: string
+        }
+        Insert: {
+          audio_files?: string[] | null
+          challenge_description?: string | null
+          challenge_title?: string | null
+          community_link?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          live_title?: string | null
+          live_video_url?: string | null
+          menu_content?: Json | null
+          month_year: string
+          title: string
+        }
+        Update: {
+          audio_files?: string[] | null
+          challenge_description?: string | null
+          challenge_title?: string | null
+          community_link?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          live_title?: string | null
+          live_video_url?: string | null
+          menu_content?: Json | null
+          month_year?: string
+          title?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -37,6 +148,42 @@ export type Database = {
           menopause_type?: string | null
           mood?: string | null
           name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
           updated_at?: string
           user_id?: string
         }

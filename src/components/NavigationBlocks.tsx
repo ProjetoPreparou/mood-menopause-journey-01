@@ -1,6 +1,7 @@
-
 import React from 'react';
 import { Card } from "@/components/ui/card";
+import { useNavigate } from 'react-router-dom';
+import { Crown } from 'lucide-react';
 
 interface NavigationBlock {
   id: string;
@@ -12,6 +13,8 @@ interface NavigationBlock {
 }
 
 const NavigationBlocks = () => {
+  const navigate = useNavigate();
+
   const navigationBlocks: NavigationBlock[] = [
     {
       id: 'ritual',
@@ -57,6 +60,24 @@ const NavigationBlocks = () => {
 
   return (
     <div className="space-y-3">
+      {/* Premium Access - Destacado */}
+      <Card className="p-4 bg-gradient-to-r from-[#A75C3F] to-[#8B4A36] text-white border-none shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer hover:scale-[1.02] active:scale-[0.98]">
+        <div className="flex items-center space-x-4" onClick={() => navigate('/premium')}>
+          <Crown className="w-8 h-8 text-white" />
+          <div className="flex-1">
+            <h3 className="font-lora font-bold text-white text-lg">
+              Florescer Premium 🌸
+            </h3>
+            <p className="font-nunito text-white/90 text-sm">
+              Conteúdos exclusivos e comunidade secreta
+            </p>
+          </div>
+          <div className="bg-white/20 text-white px-3 py-1 rounded-full text-xs font-nunito font-medium">
+            Exclusivo
+          </div>
+        </div>
+      </Card>
+
       {navigationBlocks.map((block) => (
         <Card
           key={block.id}
