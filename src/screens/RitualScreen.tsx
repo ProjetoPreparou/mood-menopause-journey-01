@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Flame, Heart } from 'lucide-react';
@@ -9,7 +8,7 @@ const RitualScreen: React.FC = () => {
   const navigate = useNavigate();
 
   const handleGoBack = () => {
-    navigate(-1);
+    navigate('/premium');
   };
 
   return (

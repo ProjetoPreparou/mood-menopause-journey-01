@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, Heart } from 'lucide-react';
@@ -14,7 +13,7 @@ const DiaryScreen: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
 
   const handleGoBack = () => {
-    navigate(-1);
+    navigate('/premium');
   };
 
   const saveDiary = async () => {
