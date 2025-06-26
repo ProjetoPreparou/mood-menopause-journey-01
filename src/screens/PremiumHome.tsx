@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import MonthlyContent from '@/components/premium/MonthlyContent';
 import ChallengeTracker from '@/components/premium/ChallengeTracker';
 import BoardJournal from '@/components/premium/BoardJournal';
-import { Crown, Sparkles, Calendar, Book } from 'lucide-react';
+import { Crown, Sparkles, Calendar, Book, Heart, Flame, Play, Edit, MessageCircle, ShoppingBag } from 'lucide-react';
 
 const PremiumHome = () => {
   const { subscription } = useSubscription();
@@ -73,6 +73,57 @@ const PremiumHome = () => {
     );
   }
 
+  const premiumSections = [
+    {
+      id: 'ritual',
+      title: 'Ritual',
+      description: 'Sua rotina diária de autocuidado',
+      icon: Flame,
+      color: 'from-pink-100 to-pink-50',
+      route: '/ritual'
+    },
+    {
+      id: 'meditation',
+      title: 'Meditação',
+      description: 'Áudios exclusivos mensais',
+      icon: Play,
+      color: 'from-purple-100 to-purple-50',
+      route: '/meditation'
+    },
+    {
+      id: 'planner',
+      title: 'Planner',
+      description: 'Organize seu mês com intenção',
+      icon: Calendar,
+      color: 'from-blue-100 to-blue-50',
+      route: '/planner'
+    },
+    {
+      id: 'diary',
+      title: 'Diário',
+      description: 'Reflexões livres e guiadas',
+      icon: Edit,
+      color: 'from-green-100 to-green-50',
+      route: '/diary'
+    },
+    {
+      id: 'message',
+      title: 'Mensagem',
+      description: 'Recados semanais da Célia',
+      icon: MessageCircle,
+      color: 'from-orange-100 to-orange-50',
+      route: '/messages'
+    },
+    {
+      id: 'shop',
+      title: 'Loja',
+      description: 'Produtos simbólicos exclusivos',
+      icon: ShoppingBag,
+      color: 'from-amber-100 to-amber-50',
+      route: '/shop'
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FDF9F5] via-white to-[#F8E8F5] font-nunito">
       <div className="max-w-4xl mx-auto p-4 space-y-6">
@@ -87,6 +138,37 @@ const PremiumHome = () => {
           <Badge className="bg-gradient-to-r from-[#A75C3F] to-[#8B4A36] text-white">
             Assinatura Ativa
           </Badge>
+        </div>
+
+        {/* Premium Sections Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          {premiumSections.map((section) => {
+            const IconComponent = section.icon;
+            return (
+              <Card
+                key={section.id}
+                className={`
+                  p-6 bg-gradient-to-r ${section.color} border-none shadow-sm 
+                  hover:shadow-md transition-all duration-200 cursor-pointer
+                  hover:scale-[1.02] active:scale-[0.98]
+                `}
+                onClick={() => navigate(section.route)}
+              >
+                <div className="flex items-center space-x-4">
+                  <IconComponent className="w-8 h-8 text-[#A75C3F]" />
+                  <div className="flex-1">
+                    <h3 className="font-lora font-semibold text-[#3C3C3C] text-lg">
+                      {section.title}
+                    </h3>
+                    <p className="font-nunito text-gray-600 text-sm">
+                      {section.description}
+                    </p>
+                  </div>
+                  <div className="text-[#A75C3F] text-xl">→</div>
+                </div>
+              </Card>
+            );
+          })}
         </div>
 
         {/* Navigation Tabs */}
