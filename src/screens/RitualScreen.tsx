@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Candle, Heart } from 'lucide-react';
+import { ArrowLeft, Flame, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
@@ -43,7 +43,7 @@ const RitualScreen: React.FC = () => {
       <div className="py-8 max-w-2xl mx-auto p-4 space-y-6">
         <Card className="p-6 bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
           <div className="text-center mb-6">
-            <Candle className="w-12 h-12 text-[#A75C3F] mx-auto mb-4" />
+            <Flame className="w-12 h-12 text-[#A75C3F] mx-auto mb-4" />
             <h2 className="font-lora text-2xl font-bold text-[#3C3C3C] mb-2">
               Momento Sagrado
             </h2>
