@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Play, Pause, Clock, Download, Volume2 } from 'lucide-react';
@@ -11,7 +10,7 @@ const MeditationScreen: React.FC = () => {
   const [playingId, setPlayingId] = useState<number | null>(null);
 
   const handleGoBack = () => {
-    navigate('/premium');
+    navigate('/dashboard');
   };
 
   const toggleMeditation = (id: number) => {

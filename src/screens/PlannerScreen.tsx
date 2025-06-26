@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Check, Star, Calendar as CalendarIcon } from 'lucide-react';
@@ -21,7 +20,7 @@ const PlannerScreen: React.FC = () => {
   const [gratitude, setGratitude] = useState(['', '', '']);
 
   const handleGoBack = () => {
-    navigate('/premium');
+    navigate('/dashboard');
   };
 
   const addTask = () => {

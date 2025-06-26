@@ -13,7 +13,7 @@ const DiaryScreen: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
 
   const handleGoBack = () => {
-    navigate('/premium');
+    navigate('/dashboard');
   };
 
   const saveDiary = async () => {

@@ -8,7 +8,7 @@ const MessageScreen: React.FC = () => {
   const navigate = useNavigate();
 
   const handleGoBack = () => {
-    navigate('/premium');
+    navigate('/dashboard');
   };
 
   const messages = [

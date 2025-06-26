@@ -8,7 +8,7 @@ const RitualScreen: React.FC = () => {
   const navigate = useNavigate();
 
   const handleGoBack = () => {
-    navigate('/premium');
+    navigate('/dashboard');
   };
 
   return (
