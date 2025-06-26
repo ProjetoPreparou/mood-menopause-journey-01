@@ -13,6 +13,12 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Onboarding from "./screens/Onboarding";
 import DayScreen from "./screens/DayScreen";
+import RitualScreen from "./screens/RitualScreen";
+import MeditationScreen from "./screens/MeditationScreen";
+import PlannerScreen from "./screens/PlannerScreen";
+import DiaryScreen from "./screens/DiaryScreen";
+import MessageScreen from "./screens/MessageScreen";
+import ShopScreen from "./screens/ShopScreen";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +39,12 @@ const App = () => (
                 <Route path="/dashboard" element={<Dashboard />}/>
                 <Route path="/premium" element={<PremiumHome />}/>
                 <Route path="/day/:dayNumber" element={<DayScreen />}/>
+                <Route path="/ritual" element={<RitualScreen />}/>
+                <Route path="/meditation" element={<MeditationScreen />}/>
+                <Route path="/planner" element={<PlannerScreen />}/>
+                <Route path="/diary" element={<DiaryScreen />}/>
+                <Route path="/messages" element={<MessageScreen />}/>
+                <Route path="/shop" element={<ShopScreen />}/>
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

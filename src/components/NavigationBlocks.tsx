@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card } from "@/components/ui/card";
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +10,7 @@ interface NavigationBlock {
   description: string;
   icon: string;
   color: string;
-  onClick: () => void;
+  route: string;
 }
 
 const NavigationBlocks = () => {
@@ -22,7 +23,7 @@ const NavigationBlocks = () => {
       description: 'Sua rotina diária de autocuidado',
       icon: '🧘‍♀️',
       color: 'from-pink-100 to-pink-50',
-      onClick: () => console.log('Navegando para Ritual')
+      route: '/ritual'
     },
     {
       id: 'meditacao',
@@ -30,7 +31,7 @@ const NavigationBlocks = () => {
       description: 'Momentos de paz e reflexão',
       icon: '🕯️',
       color: 'from-purple-100 to-purple-50',
-      onClick: () => console.log('Navegando para Meditação')
+      route: '/meditation'
     },
     {
       id: 'planner',
@@ -38,7 +39,7 @@ const NavigationBlocks = () => {
       description: 'Organize seu dia com intenção',
       icon: '📋',
       color: 'from-blue-100 to-blue-50',
-      onClick: () => console.log('Navegando para Planner')
+      route: '/planner'
     },
     {
       id: 'diario',
@@ -46,7 +47,7 @@ const NavigationBlocks = () => {
       description: 'Registre seus pensamentos',
       icon: '📝',
       color: 'from-green-100 to-green-50',
-      onClick: () => console.log('Navegando para Diário')
+      route: '/diary'
     },
     {
       id: 'mensagem',
@@ -54,12 +55,30 @@ const NavigationBlocks = () => {
       description: 'Recados especiais da Célia',
       icon: '💌',
       color: 'from-orange-100 to-orange-50',
-      onClick: () => console.log('Navegando para Mensagens')
+      route: '/messages'
     }
   ];
 
   return (
     <div className="space-y-3">
+      {/* Florescer 21 - Programa Principal */}
+      <Card className="p-4 bg-gradient-to-r from-rose-100 to-pink-100 border-rose-200 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-[1.02] active:scale-[0.98]">
+        <div className="flex items-center space-x-4" onClick={() => navigate('/day/1')}>
+          <div className="text-3xl">🌸</div>
+          <div className="flex-1">
+            <h3 className="font-lora font-bold text-[#3C3C3C] text-lg">
+              Programa Florescer 21
+            </h3>
+            <p className="font-nunito text-gray-600 text-sm">
+              Sua jornada diária de transformação
+            </p>
+          </div>
+          <div className="bg-[#A75C3F] text-white px-3 py-1 rounded-full text-xs font-nunito font-medium">
+            Dia 1
+          </div>
+        </div>
+      </Card>
+
       {/* Premium Access - Destacado */}
       <Card className="p-4 bg-gradient-to-r from-[#A75C3F] to-[#8B4A36] text-white border-none shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer hover:scale-[1.02] active:scale-[0.98]">
         <div className="flex items-center space-x-4" onClick={() => navigate('/premium')}>
@@ -86,7 +105,7 @@ const NavigationBlocks = () => {
             hover:shadow-md transition-all duration-200 cursor-pointer
             hover:scale-[1.02] active:scale-[0.98]
           `}
-          onClick={block.onClick}
+          onClick={() => navigate(block.route)}
         >
           <div className="flex items-center space-x-4">
             <div className="text-3xl">{block.icon}</div>
@@ -105,7 +124,7 @@ const NavigationBlocks = () => {
       
       {/* Loja com destaque sutil */}
       <Card className="p-4 bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-[1.02] active:scale-[0.98]">
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4" onClick={() => navigate('/shop')}>
           <div className="text-3xl">🛍️</div>
           <div className="flex-1">
             <h3 className="font-lora font-semibold text-[#3C3C3C] text-lg">

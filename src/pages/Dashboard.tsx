@@ -46,8 +46,8 @@ const Dashboard = () => {
     return null;
   }
 
-  // Simulate current day (in a real app, this would come from user progress data)
-  const currentDay = 7;
+  // TODO: Connect with real user progress from useProgram21 hook
+  const currentDay = 1; // This should come from user's actual progress
   const totalDays = 21;
 
   return (
@@ -69,7 +69,7 @@ const Dashboard = () => {
         {/* Daily Mood Selector */}
         <DailyMoodSelector />
 
-        {/* Progress Bar */}
+        {/* Progress Bar - Now clickable to go to current day */}
         <ProgressBar currentDay={currentDay} totalDays={totalDays} />
 
         {/* Navigation Blocks */}

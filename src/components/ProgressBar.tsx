@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface ProgressBarProps {
   currentDay: number;
@@ -7,13 +8,18 @@ interface ProgressBarProps {
 }
 
 const ProgressBar = ({ currentDay, totalDays }: ProgressBarProps) => {
+  const navigate = useNavigate();
   const progressPercentage = (currentDay / totalDays) * 100;
 
+  const handleProgressClick = () => {
+    navigate(`/day/${currentDay}`);
+  };
+
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-sm">
+    <div className="bg-white rounded-2xl p-4 shadow-sm cursor-pointer hover:shadow-md transition-shadow" onClick={handleProgressClick}>
       <div className="text-center mb-4">
         <h3 className="font-lora font-semibold text-[#3C3C3C] text-lg">
-          Sua Jornada
+          Programa Florescer 21
         </h3>
         <p className="font-nunito text-gray-600 text-sm">
           Dia {currentDay} de {totalDays}
@@ -50,6 +56,12 @@ const ProgressBar = ({ currentDay, totalDays }: ProgressBarProps) => {
             );
           })}
         </div>
+      </div>
+      
+      <div className="text-center mt-3">
+        <p className="font-nunito text-xs text-gray-500">
+          Toque para continuar sua jornada
+        </p>
       </div>
     </div>
   );
