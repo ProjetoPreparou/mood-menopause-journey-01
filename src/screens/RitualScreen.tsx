@@ -1,14 +1,58 @@
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Flame, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast';
+import { saveRitualCompletion, getRitualCompletion, getTodayDateString } from '@/services/ritual';
 
 const RitualScreen: React.FC = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const todayDate = getTodayDateString();
+
+  useEffect(() => {
+    // Verificar se o ritual de hoje já foi concluído
+    const completed = getRitualCompletion(todayDate);
+    setIsCompleted(completed);
+  }, [todayDate]);
 
   const handleGoBack = () => {
     navigate('/dashboard');
+  };
+
+  const handleCompleteRitual = async () => {
+    setIsLoading(true);
+    
+    try {
+      const result = saveRitualCompletion(todayDate);
+      
+      if (result.success) {
+        setIsCompleted(true);
+        toast({
+          title: "Ritual concluído! ✨",
+          description: "Seu momento sagrado foi registrado com muito amor.",
+        });
+      } else {
+        toast({
+          title: "Erro ao salvar",
+          description: "Tente novamente em alguns instantes.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Erro ao salvar",
+        description: "Tente novamente em alguns instantes.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -80,10 +124,40 @@ const RitualScreen: React.FC = () => {
             </div>
           </div>
 
-          <Button className="w-full mt-6 bg-[#A75C3F] hover:bg-[#8B4A36] text-white">
-            <Heart className="w-4 h-4 mr-2" />
-            Concluir Ritual
-          </Button>
+          {isCompleted ? (
+            <div className="mt-6 text-center">
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                <p className="text-green-700 font-medium">
+                  ✨ Ritual concluído hoje! Que lindo momento de autocuidado.
+                </p>
+              </div>
+              <Button 
+                className="w-full bg-green-600 hover:bg-green-700 text-white"
+                disabled
+              >
+                <Heart className="w-4 h-4 mr-2" />
+                Ritual Concluído
+              </Button>
+            </div>
+          ) : (
+            <Button 
+              className="w-full mt-6 bg-[#A75C3F] hover:bg-[#8B4A36] text-white"
+              onClick={handleCompleteRitual}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Salvando...
+                </>
+              ) : (
+                <>
+                  <Heart className="w-4 h-4 mr-2" />
+                  Concluir Ritual
+                </>
+              )}
+            </Button>
+          )}
         </Card>
       </div>
     </div>
