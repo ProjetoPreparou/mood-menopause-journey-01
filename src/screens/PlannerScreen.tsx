@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Check, Star, Calendar as CalendarIcon } from 'lucide-react';
+import { ArrowLeft, Plus, Check, Star, Calendar as CalendarIcon, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
 
 const PlannerScreen: React.FC = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [tasks, setTasks] = useState([
     { id: 1, text: "Tomar vitaminas", completed: false, priority: "alta" },
     { id: 2, text: "10 minutos de meditação", completed: true, priority: "alta" },
@@ -18,6 +20,8 @@ const PlannerScreen: React.FC = () => {
   const [newTask, setNewTask] = useState('');
   const [intention, setIntention] = useState('');
   const [gratitude, setGratitude] = useState(['', '', '']);
+  const [isIntentionSaving, setIsIntentionSaving] = useState(false);
+  const [intentionSaved, setIntentionSaved] = useState(false);
 
   const handleGoBack = () => {
     navigate('/dashboard');
@@ -45,6 +49,38 @@ const PlannerScreen: React.FC = () => {
     const newGratitude = [...gratitude];
     newGratitude[index] = value;
     setGratitude(newGratitude);
+  };
+
+  const saveDailyIntention = async () => {
+    if (!intention.trim()) return;
+    
+    setIsIntentionSaving(true);
+    setIntentionSaved(false);
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setIntentionSaved(true);
+      toast({
+        title: "Intenção salva! ✨",
+        description: "Sua intenção foi registrada com muito amor.",
+      });
+      
+      // Hide success message after 3 seconds
+      setTimeout(() => {
+        setIntentionSaved(false);
+      }, 3000);
+      
+    } catch (error) {
+      toast({
+        title: "Erro ao salvar",
+        description: "Tente novamente em alguns instantes.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsIntentionSaving(false);
+    }
   };
 
   const completedTasks = tasks.filter(task => task.completed).length;
@@ -85,7 +121,6 @@ const PlannerScreen: React.FC = () => {
       </div>
 
       <div className="py-8 max-w-2xl mx-auto p-4 space-y-6">
-        {/* Progress Overview */}
         <Card className="p-6 bg-gradient-to-r from-blue-100 to-cyan-100 border-blue-200">
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -110,7 +145,7 @@ const PlannerScreen: React.FC = () => {
           </div>
         </Card>
 
-        {/* Intention of the Day */}
+        {/* Intention of the Day - Updated */}
         <Card className="p-6 border-blue-200">
           <div className="flex items-center space-x-2 mb-4">
             <Star className="w-5 h-5 text-[#A75C3F]" />
@@ -122,11 +157,37 @@ const PlannerScreen: React.FC = () => {
             value={intention}
             onChange={(e) => setIntention(e.target.value)}
             placeholder="Qual é sua intenção para hoje? Como quer se sentir?"
-            className="min-h-[80px] border-blue-200 focus:border-blue-400"
+            className="min-h-[80px] border-blue-200 focus:border-blue-400 mb-4"
           />
+          
+          <div className="flex items-center justify-between">
+            <Button
+              onClick={saveDailyIntention}
+              disabled={!intention.trim() || isIntentionSaving}
+              className="bg-[#A75C3F] hover:bg-[#8B4A36] text-white"
+            >
+              {isIntentionSaving ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Salvando...
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4 mr-2" />
+                  Salvar Intenção
+                </>
+              )}
+            </Button>
+            
+            {intentionSaved && (
+              <span className="text-green-600 text-sm font-medium flex items-center">
+                <Check className="w-4 h-4 mr-1" />
+                Intenção salva com amor ✨
+              </span>
+            )}
+          </div>
         </Card>
 
-        {/* Daily Tasks */}
         <Card className="p-6 border-blue-200">
           <h2 className="font-lora text-lg font-semibold text-[#3C3C3C] mb-4">
             Tarefas de Autocuidado ✨
@@ -181,7 +242,6 @@ const PlannerScreen: React.FC = () => {
           </div>
         </Card>
 
-        {/* Gratitude Section */}
         <Card className="p-6 border-blue-200">
           <div className="flex items-center space-x-2 mb-4">
             <CalendarIcon className="w-5 h-5 text-[#A75C3F]" />
@@ -202,7 +262,6 @@ const PlannerScreen: React.FC = () => {
           </div>
         </Card>
 
-        {/* Premium Tip */}
         <Card className="p-4 bg-gradient-to-r from-cyan-50 to-blue-50 border-cyan-200">
           <div className="text-center">
             <h3 className="font-lora font-semibold text-[#3C3C3C] text-sm mb-2">
