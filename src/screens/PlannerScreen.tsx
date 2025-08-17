@@ -22,6 +22,8 @@ const PlannerScreen: React.FC = () => {
   const [gratitude, setGratitude] = useState(['', '', '']);
   const [isIntentionSaving, setIsIntentionSaving] = useState(false);
   const [intentionSaved, setIntentionSaved] = useState(false);
+  const [isGratitudeSaving, setIsGratitudeSaving] = useState(false);
+  const [gratitudeSaved, setGratitudeSaved] = useState(false);
 
   const handleGoBack = () => {
     navigate('/dashboard');
@@ -80,6 +82,39 @@ const PlannerScreen: React.FC = () => {
       });
     } finally {
       setIsIntentionSaving(false);
+    }
+  };
+
+  const saveGratitudes = async () => {
+    const filledGratitudes = gratitude.filter(g => g.trim() !== '');
+    if (filledGratitudes.length === 0) return;
+    
+    setIsGratitudeSaving(true);
+    setGratitudeSaved(false);
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setGratitudeSaved(true);
+      toast({
+        title: "Gratidões salvas! 🙏",
+        description: "Suas gratidões foram registradas com amor.",
+      });
+      
+      // Hide success message after 3 seconds
+      setTimeout(() => {
+        setGratitudeSaved(false);
+      }, 3000);
+      
+    } catch (error) {
+      toast({
+        title: "Erro ao salvar",
+        description: "Tente novamente em alguns instantes.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGratitudeSaving(false);
     }
   };
 
@@ -249,7 +284,7 @@ const PlannerScreen: React.FC = () => {
               3 Gratidões do Dia 🙏
             </h2>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-3 mb-4">
             {gratitude.map((item, index) => (
               <Input
                 key={index}
@@ -259,6 +294,33 @@ const PlannerScreen: React.FC = () => {
                 className="border-blue-200 focus:border-blue-400"
               />
             ))}
+          </div>
+
+          <div className="flex items-center justify-between">
+            <Button
+              onClick={saveGratitudes}
+              disabled={gratitude.filter(g => g.trim() !== '').length === 0 || isGratitudeSaving}
+              className="bg-[#A75C3F] hover:bg-[#8B4A36] text-white"
+            >
+              {isGratitudeSaving ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Salvando...
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4 mr-2" />
+                  Salvar Gratidões
+                </>
+              )}
+            </Button>
+            
+            {gratitudeSaved && (
+              <span className="text-green-600 text-sm font-medium flex items-center">
+                <Check className="w-4 h-4 mr-1" />
+                Gratidões salvas com amor 🙏
+              </span>
+            )}
           </div>
         </Card>
 
