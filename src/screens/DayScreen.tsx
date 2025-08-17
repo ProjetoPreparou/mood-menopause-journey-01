@@ -12,6 +12,9 @@ const DayScreen: React.FC = () => {
   const { toast } = useToast();
   
   const day = parseInt(dayNumber || '1', 10);
+  
+  // Garantir que day seja sempre um número válido
+  const validDay = isNaN(day) ? 1 : day;
 
   const handleDayComplete = () => {
     // Aqui você integraria com o sistema de progresso real
@@ -19,7 +22,7 @@ const DayScreen: React.FC = () => {
     
     toast({
       title: "Progresso salvo! 🌸",
-      description: `Dia ${day} concluído com sucesso. Continue sua jornada!`,
+      description: `Dia ${validDay} concluído com sucesso. Continue sua jornada!`,
     });
     
     // Navegar de volta ou para o próximo dia
@@ -30,7 +33,7 @@ const DayScreen: React.FC = () => {
     navigate(-1);
   };
 
-  if (day < 1 || day > 21) {
+  if (validDay < 1 || validDay > 21) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-pink-50 to-rose-50 flex items-center justify-center p-4">
         <div className="text-center">
@@ -80,18 +83,18 @@ const DayScreen: React.FC = () => {
 
       {/* Conteúdo principal */}
       <div className="py-8">
-        <DayContent day={day} onComplete={handleDayComplete} />
+        <DayContent day={validDay} onComplete={handleDayComplete} />
       </div>
 
       {/* Footer informativo */}
       <div className="pb-8">
         <div className="max-w-2xl mx-auto px-4">
           <div className="text-center text-sm text-gray-500 font-nunito">
-            <p>Progresso: Dia {day} de 21</p>
+            <p>Progresso: Dia {validDay} de 21</p>
             <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
               <div 
                 className="bg-[#A75C3F] h-2 rounded-full transition-all duration-300"
-                style={{ width: `${(day / 21) * 100}%` }}
+                style={{ width: `${(validDay / 21) * 100}%` }}
               ></div>
             </div>
           </div>
