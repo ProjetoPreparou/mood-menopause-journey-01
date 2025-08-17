@@ -17,6 +17,7 @@ const DayContent: React.FC<DayContentProps> = ({ day, onComplete }) => {
   const [isRitualComplete, setIsRitualComplete] = useState(false);
   const [reflectionText, setReflectionText] = useState('');
   const [isAudioCompleted, setIsAudioCompleted] = useState(false);
+  const [audioError, setAudioError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -49,9 +50,10 @@ const DayContent: React.FC<DayContentProps> = ({ day, onComplete }) => {
           });
         });
         audioRef.current.addEventListener('error', () => {
+          setAudioError(true);
           toast({
-            title: "Erro no áudio",
-            description: "Não foi possível reproduzir o áudio. Tente novamente.",
+            title: "Áudio indisponível",
+            description: "O áudio não pôde ser carregado, mas você pode prosseguir com o ritual e reflexão.",
             variant: "destructive",
           });
           setIsAudioPlaying(false);
@@ -67,9 +69,10 @@ const DayContent: React.FC<DayContentProps> = ({ day, onComplete }) => {
       }
     } catch (error) {
       console.error('Erro ao reproduzir áudio:', error);
+      setAudioError(true);
       toast({
-        title: "Erro no áudio",
-        description: "Não foi possível reproduzir o áudio. Verifique sua conexão.",
+        title: "Áudio indisponível",
+        description: "O áudio não pôde ser reproduzido, mas você pode prosseguir com o ritual e reflexão.",
         variant: "destructive",
       });
     }
@@ -85,7 +88,7 @@ const DayContent: React.FC<DayContentProps> = ({ day, onComplete }) => {
     }
   };
 
-  const canComplete = isAudioCompleted && isRitualComplete && reflectionText.trim().length > 0;
+  const canComplete = (isAudioCompleted || audioError) && isRitualComplete && reflectionText.trim().length > 0;
 
   const handleCompleteDay = async () => {
     if (!canComplete) return;
@@ -138,17 +141,29 @@ const DayContent: React.FC<DayContentProps> = ({ day, onComplete }) => {
               Ouça sua meditação guiada diária
             </p>
           </div>
-          {isAudioCompleted && (
+          {isAudioCompleted ? (
             <CheckCircle className="w-6 h-6 text-green-500" />
-          )}
+          ) : audioError ? (
+            <div className="text-orange-500 text-sm">Opcional</div>
+          ) : null}
         </div>
         
         <Button
           onClick={handleAudioToggle}
-          className="w-full bg-[#A75C3F] hover:bg-[#8B4A36] text-white"
+          disabled={audioError}
+          className={`w-full ${
+            audioError 
+              ? "bg-gray-400 text-gray-600 cursor-not-allowed" 
+              : "bg-[#A75C3F] hover:bg-[#8B4A36] text-white"
+          }`}
           size="lg"
         >
-          {isAudioPlaying ? (
+          {audioError ? (
+            <>
+              <Circle className="w-5 h-5 mr-2" />
+              Áudio Indisponível (Opcional)
+            </>
+          ) : isAudioPlaying ? (
             <>
               <Pause className="w-5 h-5 mr-2" />
               Pausar Áudio
@@ -252,7 +267,10 @@ const DayContent: React.FC<DayContentProps> = ({ day, onComplete }) => {
         
         {!canComplete && (
           <div className="mt-3 text-sm text-gray-600 font-nunito text-center">
-            Complete todos os passos: áudio, ritual e reflexão
+            {audioError 
+              ? "Complete: ritual e reflexão (áudio é opcional)" 
+              : "Complete todos os passos: áudio, ritual e reflexão"
+            }
           </div>
         )}
       </Card>
